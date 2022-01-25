@@ -5,8 +5,9 @@ namespace Hangman
     class Program
     {
         static string? correctWord = "hangman";
+        static char[] letters;
         static string? userName;
-        static int numberOfGuesses = 5;
+        static int numberOfGuesses = 0;
         static void Main(string[] args)
         {
             StartGame();
@@ -16,6 +17,12 @@ namespace Hangman
 
         private static void StartGame()
         {
+            letters = new char[correctWord.Length];
+            for (int i = 0; i < letters.Length; i++)
+            {
+                letters[i] = '-';
+            }
+
             AskUserForName();
         }
 
@@ -35,20 +42,39 @@ namespace Hangman
 
         private static void PlayGame()
         {
-            DisplayMaskedWord();
-            AskForLetter();
+            do
+            {
+                Console.Clear();
+                DisplayMaskedWord();
+                char guessedLetter = AskForLetter();
+                CheckLetter(guessedLetter);
+            } while (new string(letters) != correctWord);
+
+            Console.Clear();
+        }
+
+        private static void CheckLetter(char guessedLetter)
+        {
+            for (int i = 0; i < correctWord.Length; i++)
+            {
+                if(correctWord[i] == guessedLetter)
+                {
+                    letters[i] = guessedLetter;
+                }
+            }
         }
 
         static void DisplayMaskedWord()
         {
-            foreach (char c in correctWord)
+            foreach (char c in letters)
             {
-                Console.Write("-");
+                Console.Write(c);
             }
+
             Console.WriteLine();
         }
 
-        static void AskForLetter()
+        static char AskForLetter()
         {
             string input;
             do
@@ -56,14 +82,17 @@ namespace Hangman
                 Console.WriteLine("Enter a letter: ");
                 input = Console.ReadLine();
             } while (input.Length != 1);
-            
+
             numberOfGuesses++;
+
+            return input[0];
         }
 
         private static void EndGame()
         {
+            Console.WriteLine($"The correct word was: {correctWord}");
             Console.WriteLine($"Thanks for playing, {userName}!");
-            Console.WriteLine($"You had {numberOfGuesses} remaining!");
+            Console.WriteLine($"Guesses: {numberOfGuesses}");
         }
     }
 }
