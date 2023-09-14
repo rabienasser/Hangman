@@ -71,6 +71,7 @@ namespace Hangman
             {
                 Console.Write(c + " ");
             }
+
             Console.WriteLine();
         }
 
@@ -106,6 +107,7 @@ namespace Hangman
 
         private static void EndGame()
         {
+            Console.WriteLine($"The correct word was: {correctWord}");
             Console.WriteLine($"Thanks for playing, {userName}!");
             Console.WriteLine($"It took you {guessedLetters.Count} to get it right!");
         }
